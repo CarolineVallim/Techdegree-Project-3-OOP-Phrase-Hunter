@@ -1,4 +1,5 @@
 # Import your Game class
+from phrasehunter.game import Game
 
 # Create your Dunder Main statement.
 
