@@ -35,7 +35,7 @@ class Game:
     def get_random_phrase(self):
         self.active_phrase = random.choice(self.phrase)
         print(self.active_phrase)
-        Phrase.display(Phrase(self.active_phrase))
+        Phrase(self.active_phrase).display()
         
                         
     def get_guess(self):
@@ -43,46 +43,47 @@ class Game:
             attempt = input("Guess a letter:  ").lower()
             if attempt in self.guesses:
                 print('You already type this letter')
-                return game.get_guess
+                return self.get_guess()
             elif attempt not in self.guesses:
                 self.guesses.append(attempt)
+                return self.get_guess()
+            return self.get_guess()
         except ValueError as err:
             print('Ops')
-            return game.get_guess
+            return self.get_guess()
         
-        
-        
-        #if attempt in Phrase.self.phrase:
-        #    for index, letter in enumerate(self.phrase):
-        #        if letter == attempt:
-        #            Phrase.guessed_letter[index] = letter
         
     def game_over(self):
         print('Game over')
-    
+            
     def start(self):
+        # calls the method
         self.welcome()
         self.get_random_phrase()
+        # create a game loop
         game_running = True
         while game_running:
+        # calls the get_guess
             attempt = self.get_guess()
-            if self.active_phrase.check_letter(attempt):
-                print('Nice work. The phrase has this letter!')
-                for index, letter in enumerate(self.phrase):
-                    if letter == attempt:
-                        Phrase.guessed_letter[index] = letter
+            if Phrase(self.active_phrase).check_letter(attempt):
+                print('You got a letter')
+                
+                # increments the number of missed
             else:
                 self.missed += 1
-                while self.missed < 5:
-                    self.get_guess
-                else:
+                print('Sorry! Try again.')
+                if self.missed == 5:
                     self.game_over()
-
-    
-        #increments the number of missed by one if the guess is incorrect
-        #if attempt not in self.phrase:
-        #    self.missed.append(attempt)
-            
+                    game_running = False
+                elif Phrase(self.active_phrase).check_complete(self.guesses):
+                    print('Congratulations! You won!')
+                    self.game_over()
+                    game_running = False
+        # Update game state
+        # Render graphics
+                            
+        # calls game_over method
+        self.game_over()
 
 if __name__ == '__main__':
     game = Game()
