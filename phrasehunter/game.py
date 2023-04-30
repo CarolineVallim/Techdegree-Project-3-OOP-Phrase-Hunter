@@ -1,12 +1,10 @@
-# Create your Game class logic in here.
-
 from phrasehunter.phrase import Phrase
 
 import random
 
 import re
 
-# Create a class
+
 class Game:
     def __init__(self):
         self.missed = 0
@@ -17,27 +15,25 @@ class Game:
                         "Chase your own dreams"]
         self.active_phrase = []
         self.guesses = []
+        self.Phrase = 0
     
     def welcome(self):
          print('''
             ======================= PHRASE HUNTER! =======================
-                  
-            Instructions:
-            - The program will random choose a phrase that contains 4 words
-            - The first tip is the phrase with all the letters
-            - The program will prompt you to guess the letter
-            - If it's right, the program will show you the phrase update
-            - If it's wrong, you need to try again
-            - The user win when guess all the letters
-                  
-            Rules:
-            - The game is over when the user has guessed incorrectly five times
+            
+            GAME RULES:
+            - Goal: Guess the phrase that contains 4 words.
+            - Every turn you can type a single letter.
+            - The game is over when you make 5 wrong guesses.
             ''')
 
     def get_random_phrase(self):
         self.active_phrase = random.choice(self.phrase)
-        Phrase.display(Phrase,Phrase(self.active_phrase).guessed_letter)
+        self.Phrase = Phrase(self.active_phrase)
+        # Create and store an Phrase Instance Attributes.
+        self.Phrase.display(self.Phrase.matched_guess)
 
+    # Get the user input and check possible errors.
     def get_guess(self):
         while True:
             attempt = input("Guess a letter:  ").lower()
@@ -52,7 +48,7 @@ class Game:
             else:
                 print('Error: Please enter a single letter')
                 return self.get_guess()
-        
+    
     def game_over(self):
         print('''
               ========== Game over! ==========
@@ -63,33 +59,36 @@ class Game:
             game.start()
         else:
             print('Thank you for play the game!')
-        
-            
+    
     def start(self):
-        # calls the method
         self.welcome()
         self.get_random_phrase()
         
-        phrase_list = Phrase(self.active_phrase).phrase
-        guesses_list = Phrase(self.active_phrase).guessed_letter
+        # Create a variable to store Phrase instance attributes. 
+        phrase_list = self.Phrase.phrase
+        guesses_list = self.Phrase.matched_guess
         
         attempt = self.get_guess()
         
-        # create a game loop
         game_running = True
         while game_running:
-            if Phrase(self.active_phrase).check_letter(attempt):
+        
+            # If matched letter.
+            if self.Phrase.check_letter(attempt):
                 print('You got a letter')
+                # Create a loop for update the guesses_list with the matched letter.
                 for x in range(len(phrase_list)):
                     if attempt == phrase_list[x]:
-                        guesses_list[x] = attempt                
-                if Phrase(self.active_phrase).check_complete(guesses_list):
-                    Phrase.display(Phrase, guesses_list)
+                        guesses_list[x] = attempt
+                if self.Phrase.check_complete(guesses_list):
+                    self.Phrase.display(guesses_list)
                     print('Congratulations! You won!')
                     return game_running == False
                 else:
-                    Phrase.display(Phrase, guesses_list)
+                    self.Phrase.display(guesses_list)
                     attempt = self.get_guess()
+            
+            # Not matched letter.
             else:
                 self.missed += 1
                 if self.missed >= 5:
@@ -99,6 +98,3 @@ class Game:
                     print(f'You have {5-(self.missed)} out of 5 lives remaining! Try Again')
                     attempt = self.get_guess()
 
-if __name__ == '__main__':
-    game = Game()
-    game.start()
