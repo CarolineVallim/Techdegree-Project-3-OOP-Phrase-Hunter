@@ -1,6 +1,6 @@
 class Phrase:     
     def __init__(self, phrase):
-        self.phrase = list(phrase.lower())
+        self.phrase = list((phrase).lower())
         
         self.matched_guess = []
         
